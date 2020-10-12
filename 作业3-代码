@@ -1,0 +1,35 @@
+/*!
+ * MindPlus
+ * mpython
+ *
+ */
+#include <MPython.h>
+#include <DFRobot_Iot.h>
+// 静态常量
+const String topics[5] = {"2018764120/罗威","2018764128/李汉源","","",""};
+// 创建对象
+DFRobot_Iot myIot;
+
+
+// 主程序开始
+void setup() {
+	mPython.begin();
+	myIot.wifiConnect("ach3", "09876543210");
+	while (!myIot.wifiStatus()) {yield();}
+	display.setCursorLine(2);
+	display.printLine("连接成功");
+	display.setCursorLine(1);
+	display.printLine(myIot.getWiFiLocalIP());
+	myIot.init("192.168.137.228","602","","iot", topics, 1883);
+	myIot.connect();
+	while (!myIot.connected()) {yield();}
+	display.setCursorLine(3);
+	display.printLine("mqtt连接成功");
+}
+void loop() {
+	if ((buttonA.isPressed())) {
+		myIot.publish(topic_1, "2018764120罗威");
+		display.setCursorLine(4);
+		display.printLine("发送成功");
+	}
+}
